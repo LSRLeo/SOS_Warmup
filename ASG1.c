@@ -4,11 +4,11 @@ Warm Up Homework 1
 Name: Shirui Liu
 */
 
-//#include <stdio.h>
+
 
 int parse_command(char *inp, int *argc, char *argv[]);
 char *itoa(int value, char *str, int base);
-void printany();
+void printany(char type, void *data);
 // void populate_desc(int base, int limit, int flag, DESC *g);
 
 
@@ -123,29 +123,28 @@ char *itoa(int value, char *str, int base){
 
 
 
+/* We are allowed two arguments
+we can use something to indicate the data type and a pointer to the data*/
+void printany(char type, void *data){
+    //we have integer, unsigned integer, char, long, and float
+    //the user can provide a type to indicate what type of data they are passing in
+    if (type == 'i') {
+        printf("%d\n", *(int *)data); //type cast so we know how many bytes to read from the pointer address
+    } else if (type == 'u') {
+        printf("%u\n", *(unsigned int *)data);
+    } else if (type == 'c') {
+        printf("%c\n", *(char *)data);
+    } else if (type == 'l') {
+        printf("%ld\n", *(long *)data);
+    } else if (type == 'f') {
+        printf("%f\n", *(float *)data);
+    } else {
+        printf("Unknown type: %c\n", type);
+    }
+}
 
 
-
-
-// int main(void)
-// {
-//     char buf[80];
-//     char line[] = "ls  -l   file.txt";
-//     char *argv[10];
-//     int argc = 0;
-//     int n;
-//     int i;
-//     printf("%s\n", itoa(512, buf, 2));
-//     printf("%s\n", itoa(512, buf, 8));
-//     printf("%s\n", itoa(512, buf, 10));
-//     printf("%s\n", itoa(512, buf, 16));
-//     printf("%s\n", itoa(-512, buf, 10));
-//     printf("%s\n", itoa(-512, buf, 16));
-//     printf("%s\n", itoa(0, buf, 10));
-//     printf("%s\n", itoa(7, buf, 2));
-//     n = parse_command(line, &argc, argv);
-//     printf("count=%d\n", n);
-//     for (i = 0; i < argc; i++)
-//         printf("%s\n", argv[i]);
-//     return 0;
-// }
+int main(void)
+{
+    return 0;
+}
