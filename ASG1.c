@@ -1,15 +1,30 @@
 /*
 Warm Up Homework 1
-
 Name: Shirui Liu
+Date: 2026-09-21
 */
 
 
 
+
+/*
+unsigned short is 2 byte or 16 bits
+unsigned char is 1 byte or 8 bits
+*/
+typedef struct {
+    unsigned short limit_0_15; // bits 0 (lowest order) to 15 of limit
+    unsigned short base_0_15; // bits 0 to 15 of base
+    unsigned char base_16_23; // bits 16 to 23 of base
+    unsigned char limit_and_flag; // bits 16 to 19 of limit and 0 to 3 of flag
+    unsigned char base_24_31; // bits 24 to 31 of base
+} DESC;
+
+
+/* Prototypes*/
 int parse_command(char *inp, int *argc, char *argv[]);
 char *itoa(int value, char *str, int base);
 void printany(char type, void *data);
-// void populate_desc(int base, int limit, int flag, DESC *g);
+void populate_desc(int base, int limit, int flag, DESC *g);
 
 
 
@@ -66,7 +81,6 @@ char *itoa(int value, char *str, int base){
 
     //check if the base is valid (between 2 and 36)
     if (base != 10 && base != 2 && base != 8 && base != 16) {
-        printf("Invalid base: %d. Base must be 2, 8, 10, or 16.\n", base);
         str[0] = '\0'; //return an empty string if the base is invalid
         return str;
     }
@@ -143,6 +157,19 @@ void printany(char type, void *data){
     }
 }
 
+void populate_desc(int base, int limit, int flag, DESC *g){
+    //first populat the base 
+    (*g).base_0_15 = (unsigned short)(base & 0xFFFF); //0xFFFF is the mask for the lower 16 bits of the base
+    (*g).base_16_23 = (unsigned char)(base >> 16 & 0xFF); //shift the base right by 16 to keep the higher 8 bites (16-23) and then use masking to get the desired bits
+    (*g).base_24_31 = (unsigned char)(base >> 24 & 0xFF); //shift the base right by 24 to keep the higher 8 bits (24-31) and then use masking to get the desired bits
+
+    //now populate the limit and flag
+    (*g).limit_0_15 = (unsigned short)(limit & 0xFFFF); //mask the lower 16 bits of the limit
+    //To get 16-19 bits of limit, we need to shift the limit to the right by 16 and use masking to get the last 4 bits
+    //to get 0-3 bits of flag, we just need to use masking to get the lower 4 bits
+    //to combine the two, we use bitwise and we also have to move the flag bits to the left by 4 to leave space for the flag
+    (*g).limit_and_flag = ((flag & 0xF) << 4) | (unsigned char)((limit >> 16 & 0xF)); //combine the two parts using bitwise OR
+}
 
 int main(void)
 {
