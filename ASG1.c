@@ -5,7 +5,8 @@ Date: 2026-09-21
 */
 
 
-
+/*library was used for testing purposes*/
+//#include <stdio.h>
 
 /*
 unsigned short is 2 byte or 16 bits
@@ -28,6 +29,10 @@ void populate_desc(int base, int limit, int flag, DESC *g);
 
 
 
+/*
+This function splits the character array inp into words, and return the number of words. A sequence of non-blank
+characters ending in one or more blank spaces is a word
+*/
 int parse_command(char *inp, int *argc, char *argv[]){
     //have something to keep count of the words we found
     int count = 0;
@@ -64,7 +69,10 @@ int parse_command(char *inp, int *argc, char *argv[]){
     return count; //also return the count of words found
 }
 
-
+/*
+This fucntion convert value into a null-terminated string using the specified base (2, 8, 10 or 16) and store the result
+in the str array (pre-allocated)
+*/
 char *itoa(int value, char *str, int base){
 
     char map[] = "0123456789abcdef";
@@ -136,9 +144,12 @@ char *itoa(int value, char *str, int base){
 }
 
 
+/*
+This function can print any primitive C data type (char, int, unsigned,
+long, and float) and we can design it to have two arguments to the function
+*/
 
-/* We are allowed two arguments
-we can use something to indicate the data type and a pointer to the data*/
+//we can use something to indicate the data type and a pointer to the data*/
 void printany(char type, void *data){
     //we have integer, unsigned integer, char, long, and float
     //the user can provide a type to indicate what type of data they are passing in
@@ -157,6 +168,10 @@ void printany(char type, void *data){
     }
 }
 
+/*
+This function takes as input three integers base, limit and flag, and a DESC pointer g. The
+function then populates the memory pointed to by g as per the comments given in the struct description.
+*/
 void populate_desc(int base, int limit, int flag, DESC *g){
     //first populat the base 
     (*g).base_0_15 = (unsigned short)(base & 0xFFFF); //0xFFFF is the mask for the lower 16 bits of the base
@@ -171,7 +186,55 @@ void populate_desc(int base, int limit, int flag, DESC *g){
     (*g).limit_and_flag = ((flag & 0xF) << 4) | (unsigned char)((limit >> 16 & 0xF)); //combine the two parts using bitwise OR
 }
 
-int main(void)
-{
-    return 0;
-}
+
+/* Main Function for Testing Purposes*/
+// int main(void)
+// {
+//     char buf[40];
+//     char inp[] = "hello world  again";
+//     char *argv[10];
+//     int argc;
+//     int k;
+ 
+//     char c = 'A';
+//     int i = -42;
+//     unsigned int u = 4000000000u;
+//     long l = 1234567890L;
+//     float f = 3.14f;
+//     DESC d;
+ 
+//     //parse_command
+//     parse_command(inp, &argc, argv);
+//     printf("argc = %d\n", argc);
+//     for (k = 0; k < argc; k++) {
+//         printf("  argv[%d] = %s\n", k, argv[k]);
+//     }
+ 
+//     //itoa
+//     printf("%s\n", itoa(512, buf, 2));
+//     printf("%s\n", itoa(512, buf, 8));
+//     printf("%s\n", itoa(512, buf, 10));
+//     printf("%s\n", itoa(512, buf, 16));
+//     printf("%s\n", itoa(-512, buf, 10));
+//     printf("%s\n", itoa(-512, buf, 16));
+//     printf("%s\n", itoa(0, buf, 10));
+//     printf("%s\n", itoa(7, buf, 2));
+ 
+//     //printany
+//     printany('c', &c);
+//     printany('i', &i);
+//     printany('u', &u);
+//     printany('l', &l);
+//     printany('f', &f);
+//     printany('z', &i);
+ 
+//     //populate_desc
+//     populate_desc(0x12345678, 0xABCDE, 0x7, &d);
+//     printf("limit_0_15     = %04x\n", d.limit_0_15);
+//     printf("base_0_15      = %04x\n", d.base_0_15);
+//     printf("base_16_23     = %02x\n", d.base_16_23);
+//     printf("limit_and_flag = %02x\n", d.limit_and_flag);
+//     printf("base_24_31     = %02x\n", d.base_24_31);
+ 
+//     return 0;
+// }
